@@ -41,6 +41,9 @@ cfg_if! {
     } else if #[cfg(target_env = "sgx")] {
         mod sgx;
         pub use self::sgx::*;
+    } else if #[cfg(target_os = "chord")] {
+        mod chord;
+        pub use self::chord::*;
     } else {
         compile_error!("libstd doesn't compile for this platform yet");
     }

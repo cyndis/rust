@@ -17,3 +17,9 @@ pub unsafe fn cleanup(_ptr: *mut u8) -> Box<dyn Any + Send> {
 pub unsafe fn panic(_data: Box<dyn Any + Send>) -> u32 {
     intrinsics::abort()
 }
+
+#[lang = "eh_personality"]
+#[no_mangle]
+unsafe extern "C" fn rust_eh_personality() {
+    loop { }
+}

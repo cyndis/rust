@@ -6,6 +6,7 @@ use std::env;
 
 fn main() {
     let target = env::var("TARGET").expect("TARGET was not set");
+
     if target.contains("linux") {
         if target.contains("android") {
             println!("cargo:rustc-link-lib=dl");

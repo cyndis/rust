@@ -53,6 +53,8 @@ cfg_if! {
                  all(target_arch = "wasm32", not(target_os = "emscripten")),
                  target_env = "sgx"))] {
         pub use sys::net;
+    } else if #[cfg(target_os = "chord")] {
+        pub use sys::net;
     } else {
         pub mod net;
     }

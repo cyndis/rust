@@ -694,8 +694,9 @@ impl<'a> CrateLoader<'a> {
         }
         if data.root.panic_strategy != desired_strategy {
             self.sess.err(&format!("the crate `{}` does not have the panic \
-                                    strategy `{}`",
-                                   name, desired_strategy.desc()));
+                                    strategy `{}` (it has `{}`)",
+                                   name, desired_strategy.desc(), 
+                                   data.root.panic_strategy.desc()));
         }
 
         self.sess.injected_panic_runtime.set(Some(cnum));
