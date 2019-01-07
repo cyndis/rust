@@ -106,7 +106,6 @@ pub fn hashmap_random_keys() -> (u64, u64) {
 // Implement a minimal set of system calls to enable basic IO
 pub enum SysCallIndex {
     Read = 0,
-    Write = 1,
     Exit = 2,
     Args = 3,
     GetEnv = 4,
@@ -135,24 +134,6 @@ impl ReadSysCall {
         } else {
             0
         }
-    }
-}
-
-#[repr(C)]
-pub struct WriteSysCall {
-    fd: usize,
-    ptr: *const u8,
-    len: usize,
-}
-
-impl WriteSysCall {
-    pub fn perform(fd: usize, buffer: &[u8]) {
-        let mut call_record = WriteSysCall {
-            fd,
-            len: buffer.len(),
-            ptr: buffer.as_ptr()
-        };
-        unsafe { syscall(SysCallIndex::Write, &mut call_record); }
     }
 }
 

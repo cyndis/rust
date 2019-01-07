@@ -1,9 +1,14 @@
 use io;
-use sys::{ReadSysCall, WriteSysCall};
+use sys::{ReadSysCall};
 
 pub struct Stdin;
 pub struct Stdout;
 pub struct Stderr;
+
+extern "Rust" {
+    #[allow(improper_ctypes)]
+    fn ipc_print(data: &[u8]);
+}
 
 impl Stdin {
     pub fn new() -> io::Result<Stdin> {
@@ -21,7 +26,7 @@ impl Stdout {
     }
 
     pub fn write(&self, data: &[u8]) -> io::Result<usize> {
-        WriteSysCall::perform(1, data);
+        unsafe { ipc_print(data); }
         Ok(data.len())
     }
 
@@ -36,7 +41,7 @@ impl Stderr {
     }
 
     pub fn write(&self, data: &[u8]) -> io::Result<usize> {
-        WriteSysCall::perform(2, data);
+        unsafe { ipc_print(data); }
         Ok(data.len())
     }
 
@@ -61,9 +66,5 @@ pub fn is_ebadf(_err: &io::Error) -> bool {
 }
 
 pub fn panic_output() -> Option<impl io::Write> {
-    if cfg!(feature = "wasm_syscall") {
-        Stderr::new().ok()
-    } else {
-        None
-    }
+    Stderr::new().ok()
 }
